@@ -1,4 +1,4 @@
-Login System Backend with Django and DRF (Django Rest Framework) for learning purposes.
+Login System Backend with Django and DRF (Django Rest Framework) for learning purposes. It works alongisde its Vue3 Frontend
 
 The purpose of this project is to get a better understanding of Django as a backend.
 
