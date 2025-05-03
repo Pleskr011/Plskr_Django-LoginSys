@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-4yl-!wi7gh(k@ocpvp*2*s+b+k1!%&(hkge(c7ob86vq5mip0q
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["localhost", os.environ.get('FRONTEND', 'localhost')]
 
 
 # Application definition
@@ -40,20 +40,22 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'daphne',
 ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 #CORS
-CORS_ORIGIN_ALLOW_ALL = True # Dangerous in production. It would be better to use a whitelist
+#CORS_ORIGIN_ALLOW_ALL = True # Dangerous in production. It would be better to use a whitelist
 CORS_ALLOW_CREDENTIALS = True
 
 #CSRF
 #This only works with production URLs. No need for localhost
-CSRF_TRUSTED_ORIGINS = ['http://localhost:5173']
+CSRF_TRUSTED_ORIGINS = [os.environ.get('FRONTEND_URL', 'http://localhost:5173'), 'http://localhost:5173']
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173"
+    os.environ.get('FRONTEND_URL', 'http://localhost:5173'),
+    'http://localhost:5173',
 ]
 
 #Middleware
@@ -87,7 +89,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'seclogin.wsgi.application'
-
+ASGI_APPLICATION = "seclogin.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases

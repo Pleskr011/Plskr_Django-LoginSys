@@ -6,7 +6,6 @@ from rest_framework import status
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth import authenticate, login
-import qrcode
 import pyotp
 from .models import CustomUser
 from .serializers import userSerializer, LoginSerializer
@@ -31,10 +30,13 @@ def user_detail(request):
 
 @api_view(['POST'])
 def user_create(request):
+    print('Start creating user process...')
     serializer = userSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
+        print('User created!')
     else:
+        print('Error')
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     return Response(serializer.data)
 
