@@ -25,13 +25,15 @@ SECRET_KEY = 'django-insecure-4yl-!wi7gh(k@ocpvp*2*s+b+k1!%&(hkge(c7ob86vq5mip0q
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", os.environ.get('FRONTEND', 'localhost')]
+ALLOWED_HOSTS = ["localhost", '127.0.0.1', os.environ.get('FRONTEND', 'localhost')]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'loginApp.apps.LoginappConfig',
+    'chat',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
-    'daphne',
+    
 ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -90,6 +92,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'seclogin.wsgi.application'
 ASGI_APPLICATION = "seclogin.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases

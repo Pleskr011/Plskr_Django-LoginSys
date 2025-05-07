@@ -30,13 +30,13 @@ def user_detail(request):
 
 @api_view(['POST'])
 def user_create(request):
-    print('Start creating user process...')
+    #print('Start creating user process...')
     serializer = userSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-        print('User created!')
+        #print('User created! -- ', serializer.data)
     else:
-        print('Error')
+        #print('Error')
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     return Response(serializer.data)
 
@@ -46,7 +46,8 @@ def auth_view(request):
     if serializer.is_valid():
         email = serializer.validated_data['email']
         password = serializer.validated_data['password']
-        user = authenticate(request, email=email, password=password)       
+        user = authenticate(request, email=email, password=password)
+        #print("printing user...: ", email, password, user)      
         if user is not None:
             if user.isMfaEnabled:
                 return Response({'message': 'Check your auth app', 'mfa': True}, status=status.HTTP_200_OK)
@@ -56,6 +57,7 @@ def auth_view(request):
             #print(request.session.get_expiry_date())
             return Response({'message': 'MFA code sent!', 'mfa': False}, status=status.HTTP_200_OK)
         else:
+            print("user is None...")
             return Response({'error': 'Invalid username or password'}, status=status.HTTP_401_UNAUTHORIZED)
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -70,6 +72,7 @@ def login_view(request):
         if user.isMfaEnabled:
             if check_otp(user.secret_key, mfa_code):
                 login(request, user)
+                print("Logged in!")
                 return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
         if user.MFA_code == mfa_code:
             user.MFA_code = ''
@@ -183,7 +186,7 @@ def activateMFA(request):
     user.save()
     return Response({'message': 'QR code sent!', 'qr_uri': uri}, status=status.HTTP_200_OK)
 
-# ---- utiliy functions. Should be moved to utils.py -----
+# ---- utiliy -----
 def send_mfa(email):
     user = CustomUser.objects.get(email=email)
     #secret_key = pyotp.random_base32()

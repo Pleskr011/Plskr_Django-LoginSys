@@ -61,7 +61,7 @@ class LoginSerializer(serializers.ModelSerializer):
         if user is None:
             raise serializers.ValidationError('Email not found')
         if not user.check_password(password):
-            raise serializers.ValidationError('Invalid password mi estimado')
+            raise serializers.ValidationError('Invalid password')
         return values
     
     def validate_email(self, value):
